@@ -1,0 +1,208 @@
+{
+  "categories": [
+    {
+      "id": "consumables",
+      "name": "Tyre Repair Consumables",
+      "summary": "Complete puncture repair solutions. Includes premium mushroom plugs, rubber repair strings, patches, and vulcanising fluid for permanent, airtight seals on tubeless tyres."
+    },
+    {
+      "id": "tools",
+      "name": "Professional Workshop Tools & Kits",
+      "summary": "Heavy-duty tools built for daily workshop use, including carbide cutters, scrapers, and T-handle insertion tools."
+    },
+    {
+      "id": "wheel",
+      "name": "Wheel Protection & Mounting",
+      "summary": "Protect alloy wheels and fit tyres with rim protectors, mounting grease, and adhesive steel wheel weights."
+    },
+    {
+      "id": "valve",
+      "name": "Valve Tools & Service Accessories",
+      "summary": "Valve core tools, a tyre inflator, and service accessories including frameless wiper blades."
+    }
+  ],
+  "products": [
+    {
+      "number": "01",
+      "name": "Quick Fix Q6 Mushroom Plugs",
+      "spec": "6 mm · 24 per box",
+      "sku": "JY-M01",
+      "price": 25,
+      "category": "consumables",
+      "image": "images/products/01-mushroom-plugs.png"
+    },
+    {
+      "number": "02",
+      "name": "Quick Fix Tyre Repair Cutters",
+      "spec": "Carbide cutters · multiple shapes",
+      "sku": "JY-T01",
+      "price": 20,
+      "category": "tools",
+      "image": "images/products/02-tyre-repair-cutters.png",
+      "option": {
+        "type": "text",
+        "label": "Shape",
+        "placeholder": "Cutter shape, if you have a preference"
+      }
+    },
+    {
+      "number": "03",
+      "name": "Quick Fix 242 Repair Inserts",
+      "spec": "6 mm × 203 mm · 25 per box",
+      "sku": "JY-M02",
+      "price": 20,
+      "category": "consumables",
+      "image": "images/products/03-repair-inserts.png"
+    },
+    {
+      "number": "04",
+      "name": "Quick Fix Q4.5 Repair Units",
+      "spec": "4.5 mm stem · 40 mm patch\n24 per box",
+      "sku": "JY-M03",
+      "price": 25,
+      "category": "consumables",
+      "image": "images/products/04-repair-units.png"
+    },
+    {
+      "number": "05",
+      "name": "Angled Tyre Lubricant Brush",
+      "spec": "32 cm · valve core tool included",
+      "sku": "JY-T02",
+      "price": 5,
+      "category": "wheel",
+      "image": "images/products/05-lubricant-brush.png"
+    },
+    {
+      "number": "06",
+      "name": "Wheel Rim Protector",
+      "spec": "22 cm · packs of 10 / 30 / 50",
+      "sku": "JY-A01",
+      "price": 5,
+      "category": "wheel",
+      "image": "images/products/06-rim-protector.png",
+      "option": {
+        "type": "select",
+        "label": "Pack size",
+        "choices": ["Pack of 10", "Pack of 30", "Pack of 50"]
+      }
+    },
+    {
+      "number": "07",
+      "name": "White Tyre Mounting Grease",
+      "spec": "1 kg tub",
+      "sku": "JY-A02",
+      "price": 10,
+      "category": "wheel",
+      "image": "images/products/07-mounting-grease-1kg.png"
+    },
+    {
+      "number": "08",
+      "name": "White Tyre Mounting Grease",
+      "spec": "3 kg tub",
+      "sku": "JY-A03",
+      "price": 30,
+      "category": "wheel",
+      "image": "images/products/08-mounting-grease-3kg.png"
+    },
+    {
+      "number": "09",
+      "name": "V350 Adhesive Steel Wheel Weights",
+      "spec": "5 g segments · 100 strips · 4 boxes",
+      "sku": "JY-M04",
+      "price": 30,
+      "category": "wheel",
+      "image": "images/products/09-wheel-weights.png"
+    },
+    {
+      "number": "10",
+      "name": "Extended Valve Core Wrench",
+      "spec": "Approx. 125 mm · size options",
+      "sku": "JY-T03",
+      "price": 5,
+      "category": "valve",
+      "image": "images/products/10-valve-core-wrench.png",
+      "option": {
+        "type": "text",
+        "label": "Size",
+        "placeholder": "Size option"
+      }
+    },
+    {
+      "number": "11",
+      "name": "T-Handle Tyre Valve Stem Tool",
+      "spec": "Blue T-handle style shown",
+      "sku": "JY-T04",
+      "price": 5,
+      "category": "valve",
+      "image": "images/products/11-valve-stem-tool.png"
+    },
+    {
+      "number": "12",
+      "name": "Tyre Inflator Air Lever",
+      "spec": "Model 0101 · short type · approx. 5.5 cm",
+      "sku": "JY-T05",
+      "price": 25,
+      "category": "valve",
+      "image": "images/products/12-inflator-lever.png"
+    },
+    {
+      "number": "13",
+      "name": "Tubeless Tyre Repair Tool Set",
+      "spec": "T-handle probe & insertion tools",
+      "sku": "JY-T06",
+      "price": 15,
+      "category": "tools",
+      "image": "images/products/13-repair-tool-set.png"
+    },
+    {
+      "number": "14",
+      "name": "Tyre Repair Scraper",
+      "spec": "PHG-010 black · PHG-011 red",
+      "sku": "JY-T07",
+      "price": 5,
+      "category": "tools",
+      "image": "images/products/14-repair-scraper.png",
+      "option": {
+        "type": "select",
+        "label": "Colour / code",
+        "choices": ["PHG-010 black", "PHG-011 red"]
+      }
+    },
+    {
+      "number": "15",
+      "name": "Quick Fix Vulcanising Fluid",
+      "spec": "Room-temperature type · 200 ml",
+      "sku": "JY-M05",
+      "price": 25,
+      "category": "consumables",
+      "image": "images/products/15-vulcanising-fluid.png"
+    },
+    {
+      "number": "16",
+      "name": "Wooden Handle Stitching Roller",
+      "spec": "For pressing repair patches onto the tyre liner",
+      "sku": "JY-T08",
+      "price": 5,
+      "category": "tools",
+      "image": "images/products/16-stitching-roller.png"
+    },
+    {
+      "number": "17",
+      "name": "Wheel Weight Hammer Pliers",
+      "spec": "23 cm · hammer head 2.2 cm",
+      "sku": "JY-T09",
+      "price": 10,
+      "category": "wheel",
+      "image": "images/products/17-hammer-pliers.png"
+    },
+    {
+      "number": "18",
+      "name": "Frameless Wiper Blades",
+      "spec": "Soft flat-beam type · sold as pair",
+      "sku": "JY-M06",
+      "price": 9,
+      "category": "valve",
+      "image": "images/products/18-wiper-blades.png"
+    }
+  ]
+}

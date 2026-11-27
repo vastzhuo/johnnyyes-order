@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Johnny Yes | Order tyre repair supplies</title>
+  <meta name="description" content="Order Johnny Yes tyre repair and workshop supplies at public retail prices. Melbourne metro delivery. Payment is arranged offline.">
+  <meta name="theme-color" content="#172554">
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700&family=Open+Sans:wght@400;600;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#shop">
+        <img class="logo" src="images/logo.webp" alt="Johnny Yes Automotive Tyre Repair Supplies" width="640" height="479">
+      </a>
+      <nav class="header-nav" aria-label="Shop">
+        <a href="#shop">Shop</a>
+        <a href="https://www.johnnyyes.com.au">Back to johnnyyes.com.au</a>
+        <a class="btn btn-primary phone" href="tel:0415699319"><span class="phone-label">Contact Johnny</span> 0415 699 319</a>
+        <a class="btn btn-navy cart-link" id="cart-link" href="#cart">Cart <span id="cart-count">0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <noscript>
+      <p class="notice wrap">This ordering page needs JavaScript to build your order. Call Johnny on <a href="tel:0415699319">0415 699 319</a> or email <a href="mailto:info@johnnyyes.com.au">info@johnnyyes.com.au</a>.</p>
+    </noscript>
+
+    <section id="shop">
+      <div class="hero">
+        <div class="wrap hero-inner">
+          <p class="kicker">Repair materials · Tools · Wheel service essentials</p>
+          <h1>Order tyre repair &amp; workshop supplies</h1>
+          <p>Public retail prices for Melbourne workshops and retailers. Delivery across Melbourne metro.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#catalogue">Browse products</a>
+            <a class="btn btn-ghost" href="https://www.johnnyyes.com.au/#kat-m7VqDfGZKVjmXo7J">Trade customer? Apply for a trade account</a>
+          </div>
+        </div>
+      </div>
+      <div class="trade-banner">
+        <div class="wrap">
+          <a href="https://www.johnnyyes.com.au/#kat-m7VqDfGZKVjmXo7J">Trade customer? Apply for a trade account</a>
+          <p>Retail prices are listed on this page. Wholesale pricing is available after Johnny reviews a trade account.</p>
+        </div>
+      </div>
+      <div class="wrap shop-body">
+        <nav id="category-nav" class="chips" aria-label="Product categories"></nav>
+        <div id="catalogue">
+          <p class="fine">Loading the catalogue…</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cart" hidden>
+      <div class="wrap page">
+        <h1>Your order</h1>
+        <div id="cart-empty" class="panel">
+          <p>Your order is empty.</p>
+          <a class="btn btn-primary" href="#shop">Browse the catalogue</a>
+        </div>
+        <div id="cart-filled" hidden>
+          <div id="cart-lines"></div>
+          <div class="panel totals">
+            <p class="subtotal-row">Subtotal <strong id="cart-subtotal">$0 AUD</strong></p>
+            <p class="fine">Public retail prices for Melbourne metro delivery. Johnny confirms the final total and delivery.</p>
+            <a class="btn btn-primary" href="#checkout">Continue to checkout</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checkout" hidden>
+      <div class="wrap page">
+        <h1>Checkout</h1>
+        <p class="lede">Melbourne metro delivery. Payment is arranged offline, and there is no card payment on this site.</p>
+        <div class="checkout-layout">
+          <form id="checkout-form" novalidate>
+            <div id="form-errors" class="form-errors" role="alert" hidden></div>
+            <div class="notice">
+              <strong>Payment is arranged offline.</strong>
+              There is no card payment on this site. Johnny confirms the final total and delivery after you send the order.
+            </div>
+
+            <div class="field">
+              <label for="business">Business / shop name <span class="req">Required</span></label>
+              <input id="business" name="business" autocomplete="organization" maxlength="120" required>
+            </div>
+            <div class="field">
+              <label for="contact">Contact name <span class="req">Required</span></label>
+              <input id="contact" name="contact" autocomplete="name" maxlength="120" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="req">Required</span></label>
+              <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" required>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">Required</span></label>
+              <input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" required>
+            </div>
+            <div class="field">
+              <label for="address">Delivery address (Melbourne metro) <span class="req">Required</span></label>
+              <textarea id="address" name="address" rows="3" maxlength="240" autocomplete="street-address" placeholder="Street, suburb, VIC postcode" required></textarea>
+              <p class="hint">Delivery is across Melbourne metro only.</p>
+            </div>
+            <div class="field">
+              <label for="delivery-date">Preferred delivery date <span class="optional">Optional</span></label>
+              <input id="delivery-date" name="deliveryDate" type="date">
+            </div>
+            <div class="field">
+              <label for="notes">Notes <span class="optional">Optional</span></label>
+              <textarea id="notes" name="notes" rows="3" maxlength="500" placeholder="Gate codes, workshop hours, or anything Johnny should know"></textarea>
+            </div>
+            <fieldset class="field" id="payment-field">
+              <legend>Payment preference <span class="req">Required</span></legend>
+              <p class="hint">Johnny arranges payment with you. There is no card payment on this site.</p>
+              <label class="choice"><input type="radio" name="payment" value="Bank transfer" required> Bank transfer</label>
+              <label class="choice"><input type="radio" name="payment" value="Cash on delivery"> Cash on delivery</label>
+              <label class="choice"><input type="radio" name="payment" value="Pay on invoice"> Pay on invoice</label>
+            </fieldset>
+            <button class="btn btn-primary btn-block" type="submit">Create order summary</button>
+            <p class="hint">This prepares the order on your device. You then email, text, or copy it to Johnny. Nothing is charged here.</p>
+          </form>
+          <aside class="panel summary-card">
+            <h2>Order summary</h2>
+            <div id="checkout-summary"></div>
+            <p><a href="#cart">Edit order</a></p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="confirm" hidden>
+      <div class="wrap page">
+        <p class="print-only">Johnny Yes · Tyre repair &amp; workshop supplies · 0415 699 319 · info@johnnyyes.com.au · Melbourne metro delivery</p>
+        <p class="kicker">Order prepared</p>
+        <h1 id="order-reference">Order</h1>
+        <p id="send-status" class="notice"></p>
+        <div class="actions no-print">
+          <a id="send-email" class="btn btn-primary" href="mailto:info@johnnyyes.com.au">Email Johnny</a>
+          <a id="send-sms" class="btn btn-navy" href="sms:0415699319">Text Johnny</a>
+          <button id="copy-order" class="btn btn-ghost" type="button">Copy order</button>
+          <button id="print-order" class="btn btn-ghost" type="button">Print</button>
+        </div>
+        <p id="copy-status" class="fine no-print" role="status"></p>
+        <p class="fine no-print">If the email or messages app cuts the text short, use Copy order and paste the full summary.</p>
+        <div id="order-details" class="panel"></div>
+        <h2>Message to send</h2>
+        <pre id="order-text" class="order-text"></pre>
+        <p class="no-print"><a href="#shop">Back to the catalogue</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <img class="footer-logo" src="images/logo.webp" alt="" width="640" height="479">
+        <p class="footer-name">Johnny Yes</p>
+        <p>Tyre repair &amp; workshop supplies</p>
+      </div>
+      <div>
+        <p><a href="https://www.johnnyyes.com.au">www.johnnyyes.com.au</a></p>
+        <p><a href="tel:0415699319">0415 699 319</a></p>
+        <p><a href="mailto:info@johnnyyes.com.au">info@johnnyyes.com.au</a></p>
+        <p>Melbourne metro delivery</p>
+      </div>
+      <div>
+        <p><a href="https://www.johnnyyes.com.au">Back to johnnyyes.com.au</a></p>
+        <p><a href="https://www.johnnyyes.com.au/#kat-m7VqDfGZKVjmXo7J">Trade customer? Apply for a trade account</a></p>
+      </div>
+    </div>
+    <p class="wrap footer-note">Public retail prices in AUD. Johnny confirms the final total and delivery.</p>
+  </footer>
+
+  <a id="cart-bar" class="cart-bar" href="#cart" hidden>View order · <span id="bar-total">$0 AUD</span></a>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

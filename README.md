@@ -2,7 +2,7 @@
 
 Retail ordering page for [Johnny Yes](https://www.johnnyyes.com.au), a Melbourne tyre repair and workshop supplies business. Public prices come from the Johnny Yes product catalogue. Trade customers still apply on the main site for wholesale pricing after review.
 
-Live shop: https://vastzhuo.github.io/johnnyyes-order/
+Live shop: https://shop.johnnyyes.com.au/
 
 Delivery is across Melbourne metro only. Payment is arranged offline. The page does not take card payments, and it does not state a GST treatment or a delivery fee. Johnny confirms the final total and delivery.
 
@@ -47,24 +47,15 @@ Pushes to `main` run [`.github/workflows/pages.yml`](.github/workflows/pages.yml
 
 The deploy workflow asks GitHub to turn Pages on and publish with GitHub Actions. If that is blocked, open **Settings → Pages → Build and deployment**, set the source to **GitHub Actions**, then re-run **Deploy GitHub Pages**. The public URL is:
 
-https://vastzhuo.github.io/johnnyyes-order/
+https://shop.johnnyyes.com.au/
 
-Links and images are relative, so the same files work at that path and, later, at a subdomain served from the site root.
+Links and images are relative, so the same files work on that domain and from a local server.
 
-## Custom domain later (`shop.johnnyyes.com.au`)
+## Custom domain (`shop.johnnyyes.com.au`)
 
-DNS for `johnnyyes.com.au` is not controlled from this repository. There is **no `CNAME` file** on purpose, so GitHub Pages keeps serving https://vastzhuo.github.io/johnnyyes-order/ and does not claim the subdomain yet.
+The shop is served at https://shop.johnnyyes.com.au/. There is **no `CNAME` file** in this repository. The custom domain is set in GitHub Pages, not by a file here. Do not add a `CNAME` file, and do not change the Pages custom-domain setting from this repo.
 
-When you can edit DNS:
-
-1. At the DNS host for `johnnyyes.com.au`, add a **CNAME** record:
-   - Host: `shop`
-   - Target: `vastzhuo.github.io`
-2. Wait until `shop.johnnyyes.com.au` resolves to `vastzhuo.github.io`.
-3. In this repository, open **Settings → Pages → Custom domain** and enter `shop.johnnyyes.com.au`. Saving that setting is what adds the `CNAME` file. Do that only after step 1 is in place.
-4. After the check succeeds, turn on **Enforce HTTPS**.
-
-Do not point the apex domain or `www` at this shop. Those stay on the existing marketing site. No code change is required for the subdomain: relative URLs already work from the site root.
+The DNS record for `shop` points at `vastzhuo.github.io`. That hostname is the Pages target, not a second copy of the shop. Do not point the apex domain or `www` at this shop. Those stay on the existing marketing site. Relative links already work from the site root.
 
 ## Contact
 

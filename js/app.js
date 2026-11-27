@@ -763,7 +763,10 @@
     $("copy-order").addEventListener("click", async () => {
       const order = safeOrder(readOrder());
       if (!order) return;
+      const reference = order.reference;
       const ok = await copyText(buildOrderText(order));
+      const current = safeOrder(readOrder());
+      if (!current || current.reference !== reference) return;
       $("copy-status").textContent = ok
         ? "Order copied."
         : "Could not copy automatically. Select the message below and copy it.";

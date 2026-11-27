@@ -90,8 +90,26 @@
     }, 0);
   }
 
+  function validOption(product, option) {
+    const value = typeof option === "string" ? option.trim() : "";
+    if (!product || !product.option) return value === "" ? "" : null;
+    if (product.option.type === "select") {
+      return (product.option.choices || []).includes(value) ? value : null;
+    }
+    if (product.option.type === "text") return value.slice(0, 80);
+    return value === "" ? "" : null;
+  }
+
   function knownCart() {
-    return readCart().filter((item) => bySku.has(item.sku));
+    const lines = [];
+    for (const item of readCart()) {
+      const product = bySku.get(item.sku);
+      if (!product) continue;
+      const option = validOption(product, item.option);
+      if (option === null) continue;
+      lines.push({ sku: product.sku, option, qty: clamp(item.qty) });
+    }
+    return lines;
   }
 
   function refresh() {
@@ -193,64 +211,125 @@
   }
 
   function addLine(sku, option, qty) {
-    if (!bySku.has(sku)) return;
+    const product = bySku.get(sku);
+    if (!product) return;
+    const cleanOption = validOption(product, option);
+    if (cleanOption === null) return;
     const cart = knownCart();
-    const key = lineKey(sku, option);
+    const key = lineKey(product.sku, cleanOption);
     const existing = cart.find((item) => lineKey(item.sku, item.option) === key);
     if (existing) existing.qty = clamp(existing.qty + qty);
-    else cart.push({ sku, option, qty: clamp(qty) });
+    else cart.push({ sku: product.sku, option: cleanOption, qty: clamp(qty) });
     writeCart(cart);
     refresh();
   }
 
   function renderCart(cart) {
+    const lines = $("cart-lines");
     const empty = cart.length === 0;
     $("cart-empty").hidden = !empty;
     $("cart-filled").hidden = empty;
-    if (empty) {
-      $("cart-lines").innerHTML = "";
-      return;
-    }
-    $("cart-lines").innerHTML = cart.map((item) => {
+    lines.replaceChildren();
+    if (empty) return;
+    for (const item of cart) {
       const product = bySku.get(item.sku);
-      const key = lineKey(item.sku, item.option);
       const lineTotal = Number(product.price) * item.qty;
-      const option = item.option ? `<p class="line-meta">${esc(item.option)}</p>` : "";
-      return `<article class="cart-line" data-key="${esc(key)}">
-        <img src="${esc(product.image)}" alt="">
-        <div>
-          <h3>${esc(product.number)} · ${esc(product.name)}</h3>
-          <p class="line-meta">SKU · ${esc(product.sku)} · ${money(product.price)} each</p>
-          ${option}
-          <div class="line-bottom">
-            <div class="qty" role="group" aria-label="Quantity for ${esc(product.name)}">
-              <button type="button" data-action="dec" aria-label="Decrease quantity">−</button>
-              <input data-qty type="number" min="1" max="99" value="${item.qty}" inputmode="numeric" aria-label="Quantity">
-              <button type="button" data-action="inc" aria-label="Increase quantity">+</button>
-            </div>
-            <button type="button" class="remove" data-action="remove">Remove</button>
-            <span class="line-total">${money(lineTotal)}</span>
-          </div>
-        </div>
-      </article>`;
-    }).join("");
+      const article = document.createElement("article");
+      article.className = "cart-line";
+      article.dataset.key = lineKey(item.sku, item.option);
+
+      const img = document.createElement("img");
+      img.src = product.image;
+      img.alt = "";
+
+      const body = document.createElement("div");
+      const heading = document.createElement("h3");
+      heading.textContent = product.number + " · " + product.name;
+      const meta = document.createElement("p");
+      meta.className = "line-meta";
+      meta.textContent = "SKU · " + product.sku + " · " + money(product.price) + " each";
+      body.append(heading, meta);
+      if (item.option) {
+        const option = document.createElement("p");
+        option.className = "line-meta";
+        option.textContent = item.option;
+        body.append(option);
+      }
+
+      const bottom = document.createElement("div");
+      bottom.className = "line-bottom";
+      const qty = document.createElement("div");
+      qty.className = "qty";
+      qty.setAttribute("role", "group");
+      qty.setAttribute("aria-label", "Quantity for " + product.name);
+      const dec = document.createElement("button");
+      dec.type = "button";
+      dec.dataset.action = "dec";
+      dec.setAttribute("aria-label", "Decrease quantity");
+      dec.textContent = "−";
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = "1";
+      input.max = "99";
+      input.value = String(item.qty);
+      input.inputMode = "numeric";
+      input.setAttribute("aria-label", "Quantity");
+      input.dataset.qty = "";
+      const inc = document.createElement("button");
+      inc.type = "button";
+      inc.dataset.action = "inc";
+      inc.setAttribute("aria-label", "Increase quantity");
+      inc.textContent = "+";
+      qty.append(dec, input, inc);
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "remove";
+      remove.dataset.action = "remove";
+      remove.textContent = "Remove";
+      const total = document.createElement("span");
+      total.className = "line-total";
+      total.textContent = money(lineTotal);
+      bottom.append(qty, remove, total);
+      body.append(bottom);
+      article.append(img, body);
+      lines.append(article);
+    }
     $("cart-subtotal").textContent = money(cartSubtotal(cart)) + " AUD";
   }
 
   function renderCheckoutSummary(cart) {
+    const summary = $("checkout-summary");
+    summary.replaceChildren();
     if (!cart.length) {
-      $("checkout-summary").innerHTML = "<p>Your order is empty.</p>";
+      const empty = document.createElement("p");
+      empty.textContent = "Your order is empty.";
+      summary.append(empty);
       return;
     }
-    const lines = cart.map((item) => {
+    const list = document.createElement("ul");
+    list.className = "lines";
+    for (const item of cart) {
       const product = bySku.get(item.sku);
-      const option = item.option ? ` (${item.option})` : "";
       const lineTotal = Number(product.price) * item.qty;
-      return `<li><span>${esc(product.number)} ${esc(product.name)}${esc(option)} × ${item.qty}</span><span>${money(lineTotal)}</span></li>`;
-    }).join("");
-    $("checkout-summary").innerHTML = `<ul class="lines">${lines}</ul>
-      <p class="subtotal"><span>Subtotal</span><strong>${money(cartSubtotal(cart))} AUD</strong></p>
-      <p class="fine">Melbourne metro delivery. Johnny confirms the final total and delivery. Payment is arranged offline.</p>`;
+      const li = document.createElement("li");
+      const label = document.createElement("span");
+      label.textContent = product.number + " " + product.name + (item.option ? " (" + item.option + ")" : "") + " × " + item.qty;
+      const amount = document.createElement("span");
+      amount.textContent = money(lineTotal);
+      li.append(label, amount);
+      list.append(li);
+    }
+    const subtotal = document.createElement("p");
+    subtotal.className = "subtotal";
+    const subtotalLabel = document.createElement("span");
+    subtotalLabel.textContent = "Subtotal";
+    const subtotalValue = document.createElement("strong");
+    subtotalValue.textContent = money(cartSubtotal(cart)) + " AUD";
+    subtotal.append(subtotalLabel, subtotalValue);
+    const note = document.createElement("p");
+    note.className = "fine";
+    note.textContent = "Melbourne metro delivery. Johnny confirms the final total and delivery. Payment is arranged offline.";
+    summary.append(list, subtotal, note);
   }
 
   function formatDate(iso) {
@@ -302,7 +381,51 @@
     return ios ? `sms:${number}&body=${body}` : `sms:${number}?body=${body}`;
   }
 
-  function detailsHtml(order) {
+  function clip(value, max) {
+    return String(value ?? "").slice(0, max);
+  }
+
+  function safeOrder(order) {
+    if (!order || typeof order !== "object" || !Array.isArray(order.items)) return null;
+    const payments = ["Bank transfer", "Cash on delivery", "Pay on invoice"];
+    const items = [];
+    for (const raw of order.items) {
+      const product = raw && bySku.get(raw.sku);
+      if (!product) continue;
+      const option = validOption(product, raw.option);
+      if (option === null) continue;
+      const qty = clamp(raw.qty);
+      const unitPrice = Number(product.price);
+      items.push({
+        number: product.number,
+        sku: product.sku,
+        name: product.name,
+        option,
+        qty,
+        unitPrice,
+        lineTotal: unitPrice * qty
+      });
+    }
+    return {
+      reference: clip(order.reference, 40),
+      business: clip(order.business, 120),
+      contact: clip(order.contact, 120),
+      phone: clip(order.phone, 40),
+      email: clip(order.email, 120),
+      address: clip(order.address, 240),
+      deliveryDateLabel: clip(order.deliveryDateLabel, 40) || "Not specified",
+      payment: payments.includes(order.payment) ? order.payment : "",
+      notes: clip(order.notes, 500),
+      items,
+      subtotal: items.reduce((sum, item) => sum + item.lineTotal, 0),
+      formResult: order.formResult,
+      formError: clip(order.formError, 200)
+    };
+  }
+
+  function renderOrderDetails(order) {
+    const root = $("order-details");
+    root.replaceChildren();
     const rows = [
       ["Business", order.business],
       ["Contact", order.contact],
@@ -314,15 +437,40 @@
       ["Payment", order.payment],
       ["Notes", order.notes || "None"]
     ];
-    const items = order.items.map((item) => {
-      const option = item.option ? ` (${item.option})` : "";
-      return `<li><span>${esc(item.number)} ${esc(item.sku)} ${esc(item.name)}${esc(option)} × ${item.qty}</span><span>${money(item.lineTotal)}</span></li>`;
-    }).join("");
-    return `<dl>${rows.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>
-      <h2>Items</h2>
-      <ul class="lines">${items}</ul>
-      <p class="subtotal"><span>Subtotal</span><strong>${money(order.subtotal)} AUD</strong></p>
-      <p class="fine">Public retail prices. Johnny confirms the final total and delivery. There is no card payment on this site.</p>`;
+    const list = document.createElement("dl");
+    for (const [label, value] of rows) {
+      const row = document.createElement("div");
+      const term = document.createElement("dt");
+      term.textContent = label;
+      const detail = document.createElement("dd");
+      detail.textContent = value;
+      row.append(term, detail);
+      list.append(row);
+    }
+    const heading = document.createElement("h2");
+    heading.textContent = "Items";
+    const items = document.createElement("ul");
+    items.className = "lines";
+    for (const item of order.items) {
+      const li = document.createElement("li");
+      const label = document.createElement("span");
+      label.textContent = item.number + " " + item.sku + " " + item.name + (item.option ? " (" + item.option + ")" : "") + " × " + item.qty;
+      const amount = document.createElement("span");
+      amount.textContent = money(item.lineTotal);
+      li.append(label, amount);
+      items.append(li);
+    }
+    const subtotal = document.createElement("p");
+    subtotal.className = "subtotal";
+    const subtotalLabel = document.createElement("span");
+    subtotalLabel.textContent = "Subtotal";
+    const subtotalValue = document.createElement("strong");
+    subtotalValue.textContent = money(order.subtotal) + " AUD";
+    subtotal.append(subtotalLabel, subtotalValue);
+    const note = document.createElement("p");
+    note.className = "fine";
+    note.textContent = "Public retail prices. Johnny confirms the final total and delivery. There is no card payment on this site.";
+    root.append(list, heading, items, subtotal, note);
   }
 
   function paintFormStatus(order) {
@@ -340,15 +488,15 @@
   }
 
   function renderConfirm() {
-    const order = readOrder();
-    if (!order) return;
-    document.title = `Order ${order.reference} | Johnny Yes`;
-    $("order-reference").textContent = `Order ${order.reference}`;
+    const order = safeOrder(readOrder());
+    if (!order || !order.reference) return;
+    document.title = "Order " + order.reference + " | Johnny Yes";
+    $("order-reference").textContent = "Order " + order.reference;
     const text = buildOrderText(order);
     $("order-text").textContent = text;
     $("send-email").href = buildMailto(order);
     $("send-sms").href = buildSms(order);
-    $("order-details").innerHTML = detailsHtml(order);
+    renderOrderDetails(order);
     paintFormStatus(order);
   }
 
@@ -556,7 +704,7 @@
     });
 
     $("copy-order").addEventListener("click", async () => {
-      const order = readOrder();
+      const order = safeOrder(readOrder());
       if (!order) return;
       const ok = await copyText(buildOrderText(order));
       $("copy-status").textContent = ok
@@ -586,7 +734,7 @@
       products = data.products || [];
       bySku = new Map(products.map((product) => [product.sku, product]));
       const cleaned = knownCart();
-      if (cleaned.length !== readCart().length) writeCart(cleaned);
+      if (JSON.stringify(readCart()) !== JSON.stringify(cleaned)) writeCart(cleaned);
       renderCatalogue();
     } catch (error) {
       $("catalogue").innerHTML = `<p class="notice">The catalogue could not be loaded. Call Johnny on <a href="tel:0415699319">${esc(cfg.phoneDisplay || "0415 699 319")}</a> or email <a href="mailto:${esc(cfg.email || "info@johnnyyes.com.au")}">${esc(cfg.email || "info@johnnyyes.com.au")}</a>.</p>`;

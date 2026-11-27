@@ -3,8 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Johnny Yes | Order tyre repair supplies</title>
-  <meta name="description" content="Order Johnny Yes tyre repair and workshop supplies at public retail prices. Melbourne metro delivery. Payment is arranged offline.">
+  <title>Johnny Yes Online Order</title>
+  <meta name="description" content="Order tyre repair and workshop supplies from Johnny Yes. Delivered across Melbourne metro.">
+  <meta property="og:title" content="Johnny Yes Online Order">
+  <meta property="og:description" content="Order tyre repair and workshop supplies from Johnny Yes. Delivered across Melbourne metro.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vastzhuo.github.io/johnnyyes-order/">
+  <meta property="og:image" content="https://vastzhuo.github.io/johnnyyes-order/images/logo.webp">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Johnny Yes Online Order">
+  <meta name="twitter:description" content="Order tyre repair and workshop supplies from Johnny Yes. Delivered across Melbourne metro.">
   <meta name="theme-color" content="#172554">
   <link rel="icon" href="images/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -126,8 +134,9 @@
               <label class="choice"><input type="radio" name="payment" value="Cash on delivery"> Cash on delivery</label>
               <label class="choice"><input type="radio" name="payment" value="Pay on invoice"> Pay on invoice</label>
             </fieldset>
-            <button class="btn btn-primary btn-block" type="submit">Create order summary</button>
-            <p class="hint">This prepares the order on your device. You then email, text, or copy it to Johnny. Nothing is charged here.</p>
+            <input class="honey" id="order-honey" name="_honey" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="btn btn-primary btn-block" id="place-order" type="submit">Place order</button>
+            <p class="hint">Press Place order to send this order to Johnny at info@johnnyyes.com.au. Nothing is charged on this site. Johnny confirms the final total and delivery.</p>
           </form>
           <aside class="panel summary-card">
             <h2>Order summary</h2>
@@ -141,7 +150,7 @@
     <section id="confirm" hidden>
       <div class="wrap page">
         <p class="print-only">Johnny Yes · Tyre repair &amp; workshop supplies · 0415 699 319 · info@johnnyyes.com.au · Melbourne metro delivery</p>
-        <p class="kicker">Order prepared</p>
+        <p class="kicker" id="confirm-kicker">Order prepared</p>
         <h1 id="order-reference">Order</h1>
         <p id="send-status" class="notice"></p>
         <div class="actions no-print">

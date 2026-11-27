@@ -496,6 +496,10 @@ body.has-cart-bar { padding-bottom: 68px; }
 
 .print-only { display: none; }
 
+.honey {
+  display: none;
+}
+
 :focus-visible {
   outline: 3px solid var(--blue);
   outline-offset: 2px;

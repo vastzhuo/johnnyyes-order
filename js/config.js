@@ -1,12 +1,11 @@
 // Johnny Yes shop settings.
-// Edit the values below. Leave formEndpoint as an empty string until a
-// form backend is ready. No account or API key is required for the shop itself.
+// No account or API key is required. FormSubmit emails orders to the address
+// in the URL. See the README for the one-time activation step.
 window.JOHNNYYES = {
-  // POST orders here as JSON when you add a backend.
-  // Examples (leave blank until you have one):
-  //   Formspree: "https://formspree.io/f/xxxxxxxx"
-  //   Google Apps Script web app URL that accepts a JSON POST
-  formEndpoint: "",
+  // FormSubmit AJAX endpoint. After the first order is activated, this can be
+  // swapped for FormSubmit's random alias, for example
+  // "https://formsubmit.co/ajax/your-random-alias".
+  formEndpoint: "https://formsubmit.co/ajax/info@johnnyyes.com.au",
   email: "info@johnnyyes.com.au",
   smsNumber: "0415699319",
   phoneDisplay: "0415 699 319",

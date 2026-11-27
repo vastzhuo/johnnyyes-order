@@ -497,6 +497,11 @@
     if (!order || !order.reference) return;
     document.title = "Order " + order.reference + " | Johnny Yes";
     $("order-reference").textContent = "Order " + order.reference;
+    const copyStatus = $("copy-status");
+    if (copyStatus) {
+      copyStatus.textContent = "";
+      copyStatus.classList.remove("is-visible");
+    }
     const text = buildOrderText(order);
     $("order-text").textContent = text;
     $("send-email").href = buildMailto(order);

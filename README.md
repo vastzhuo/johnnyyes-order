@@ -57,7 +57,7 @@ When `formEndpoint` is set, the page also POSTs the order. Email, SMS, and copy 
 
 Pushes to `main` run [`.github/workflows/pages.yml`](.github/workflows/pages.yml), which publishes this folder with GitHub Actions.
 
-The Pages source must be **GitHub Actions** (Settings → Pages → Build and deployment). The public URL is:
+The deploy workflow asks GitHub to turn Pages on and publish with GitHub Actions. If that is blocked, open **Settings → Pages → Build and deployment**, set the source to **GitHub Actions**, then re-run **Deploy GitHub Pages**. The public URL is:
 
 https://vastzhuo.github.io/johnnyyes-order/
 

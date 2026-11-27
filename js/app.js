@@ -497,6 +497,11 @@
     if (!order || !order.reference) return;
     document.title = "Order " + order.reference + " | Johnny Yes";
     $("order-reference").textContent = "Order " + order.reference;
+    const copyStatus = $("copy-status");
+    if (copyStatus) {
+      copyStatus.textContent = "";
+      copyStatus.classList.remove("is-visible");
+    }
     const text = buildOrderText(order);
     $("order-text").textContent = text;
     $("send-email").href = buildMailto(order);
@@ -758,7 +763,10 @@
     $("copy-order").addEventListener("click", async () => {
       const order = safeOrder(readOrder());
       if (!order) return;
+      const reference = order.reference;
       const ok = await copyText(buildOrderText(order));
+      const current = safeOrder(readOrder());
+      if (!current || current.reference !== reference) return;
       $("copy-status").textContent = ok
         ? "Order copied."
         : "Could not copy automatically. Select the message below and copy it.";

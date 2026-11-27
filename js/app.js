@@ -597,15 +597,8 @@
       notes: order.notes || "None",
       preferred_delivery_date: order.deliveryDateLabel,
       line_items: lineItemsText(order),
-      subtotal: money(order.subtotal) + " AUD",
-      items: order.items.map((item) => ({
-        sku: item.sku,
-        name: item.name,
-        option: item.option || "",
-        qty: item.qty,
-        unit_price: item.unitPrice,
-        line_total: item.lineTotal
-      }))
+      item_count: String(order.items.length),
+      subtotal: money(order.subtotal) + " AUD"
     };
   }
 

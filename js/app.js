@@ -141,7 +141,7 @@
     }
     document.body.classList.toggle("is-confirm", name === "confirm");
     const titles = {
-      shop: "Johnny Yes | Order tyre repair supplies",
+      shop: "Johnny Yes Online Order",
       cart: "Your order | Johnny Yes",
       checkout: "Checkout | Johnny Yes"
     };
@@ -475,14 +475,19 @@
 
   function paintFormStatus(order) {
     const status = $("send-status");
-    if (!order) return;
+    const kicker = $("confirm-kicker");
+    if (!order || !status) return;
     if (order.formResult === "sending") {
-      status.textContent = "Sending a copy through the order form…";
+      if (kicker) kicker.textContent = "Sending order";
+      status.textContent = "Sending your order to Johnny…";
     } else if (order.formResult === "sent") {
-      status.textContent = "A copy was submitted through the order form. You can also email or text Johnny. Nothing has been charged on this site.";
+      if (kicker) kicker.textContent = "Order received";
+      status.textContent = "Your order was received. Johnny will confirm the final total and delivery. Nothing has been charged on this site. Email, text, and copy below are there if you want another copy.";
     } else if (order.formResult === "failed") {
-      status.textContent = "The order form could not be reached (" + (order.formError || "request failed") + "). Send the order by email, SMS, or copy. Nothing has been charged.";
+      if (kicker) kicker.textContent = "Order not sent";
+      status.textContent = "The order could not be sent. You may be offline, or the form service did not accept it. Use Email, Text, or Copy below to send this order to Johnny. Nothing has been charged.";
     } else {
+      if (kicker) kicker.textContent = "Order prepared";
       status.textContent = "This order stays on this device until you send it. Email, text, or copy it to Johnny. Nothing has been charged, and there is no card payment on this site.";
     }
   }
@@ -562,6 +567,43 @@
     return `JY-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${suffix}`;
   }
 
+  function lineItemsText(order) {
+    return order.items.map((item) => {
+      const option = item.option ? " (" + item.option + ")" : "";
+      return item.sku + " " + item.name + option + " x" + item.qty + " @ " + money(item.unitPrice) + " = " + money(item.lineTotal);
+    }).join("\n");
+  }
+
+  function formSubmitBody(order) {
+    const honey = $("order-honey");
+    return {
+      _subject: "New Johnny Yes order " + order.reference,
+      _template: "table",
+      _captcha: "false",
+      _replyto: order.email,
+      _honey: honey ? honey.value : "",
+      order_reference: order.reference,
+      customer_name: order.contact,
+      business_name: order.business,
+      phone: order.phone,
+      email: order.email,
+      delivery_address: order.address,
+      payment_preference: order.payment,
+      notes: order.notes || "None",
+      preferred_delivery_date: order.deliveryDateLabel,
+      line_items: lineItemsText(order),
+      subtotal: money(order.subtotal) + " AUD",
+      items: order.items.map((item) => ({
+        sku: item.sku,
+        name: item.name,
+        option: item.option || "",
+        qty: item.qty,
+        unit_price: item.unitPrice,
+        line_total: item.lineTotal
+      }))
+    };
+  }
+
   async function submitFormEndpoint(order) {
     const endpoint = String(cfg.formEndpoint || "").trim();
     if (!endpoint) return;
@@ -569,18 +611,20 @@
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          _subject: `Johnny Yes order ${order.reference}`,
-          order_text: buildOrderText(order),
-          ...order
-        })
+        body: JSON.stringify(formSubmitBody(order))
       });
-      if (!response.ok) throw new Error("status " + response.status);
+      let payload = null;
+      try { payload = await response.json(); } catch (parseError) { payload = null; }
+      const accepted = payload && (payload.success === true || payload.success === "true");
+      if (!response.ok || !accepted) throw new Error(response.ok ? "form not accepted" : "status " + response.status);
       order.formResult = "sent";
+      order.formError = "";
     } catch (error) {
       order.formResult = "failed";
-      order.formError = error && error.message ? error.message : "request failed";
+      order.formError = error && error.message ? String(error.message).slice(0, 200) : "request failed";
     }
+    const saved = readOrder();
+    if (saved && saved.reference && saved.reference !== order.reference) return;
     writeOrder(order);
     if (currentView() === "confirm") paintFormStatus(order);
   }
@@ -654,7 +698,7 @@
       refresh();
     });
 
-    $("checkout-form").addEventListener("submit", (event) => {
+    $("checkout-form").addEventListener("submit", async (event) => {
       event.preventDefault();
       const form = event.currentTarget;
       const { data, errors } = validate(form);
@@ -667,6 +711,9 @@
         else $("form-errors").focus?.();
         return;
       }
+      const button = $("place-order");
+      button.disabled = true;
+      button.textContent = "Sending order…";
       const items = cart.map((item) => {
         const product = bySku.get(item.sku);
         const lineTotal = Number(product.price) * item.qty;
@@ -698,9 +745,14 @@
       };
       writeOrder(order);
       writeCart([]);
+      try {
+        await submitFormEndpoint(order);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Place order";
+      }
       if (location.hash === "#confirm") applyView(true);
       else location.hash = "#confirm";
-      submitFormEndpoint(order);
     });
 
     $("copy-order").addEventListener("click", async () => {

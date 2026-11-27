@@ -31,27 +31,15 @@ Then visit http://localhost:8080/
 
 ## How an order is sent
 
-There is no server. Checkout stores the cart in `localStorage` and, when the customer continues, builds an order summary on the device. The summary includes the order reference, items, SKUs, options, quantities, line totals, subtotal, and the customer details.
+Place order sends the order to `info@johnnyyes.com.au` through [FormSubmit](https://formsubmit.co). The endpoint is `formEndpoint` in [`js/config.js`](js/config.js):
 
-The customer can then:
+`https://formsubmit.co/ajax/info@johnnyyes.com.au`
 
-- email `info@johnnyyes.com.au` with the subject and body filled in
-- text `0415 699 319`
-- copy the full summary
-- print the confirmation
+No account or API key is required. The browser POSTs JSON. The message includes the order reference, customer and business names, phone, email, delivery address, payment preference, notes, each line (SKU, name, option, quantity, unit price, line total), and the subtotal.
 
-If an email or messages app shortens the link, the full summary is on the confirmation page and can be copied.
+FormSubmit needs a one-time activation. The first submission sends an activation email to `info@johnnyyes.com.au`. Someone has to open that email and click the confirmation link. Until that is done, orders do not arrive as normal messages. After activation, FormSubmit can show a random alias. To hide the inbox address, replace `formEndpoint` with `https://formsubmit.co/ajax/` plus that alias.
 
-### Add a form backend later
-
-In `js/config.js`, set `formEndpoint` to a URL that accepts `POST` with `Content-Type: application/json`. Leave it as `""` until then. The shop does not need an account or an API key.
-
-Two services that fit:
-
-- **Formspree:** use the form endpoint, for example `https://formspree.io/f/xxxxxxxx`. The JSON includes `_subject` and `order_text`, which Formspree will show in the submission.
-- **Google Sheets:** deploy a Google Apps Script web app that accepts a JSON POST and appends a row, then paste that web app URL into `formEndpoint`.
-
-When `formEndpoint` is set, the page also POSTs the order. Email, SMS, and copy stay available either way. A failed POST does not discard the summary.
+If FormSubmit cannot be reached, the confirmation page explains that and still offers email, SMS, and copy. Those three stay on the confirmation page after a successful send as well. Nothing is charged on the site. Johnny confirms the final total and delivery.
 
 ## GitHub Pages
 
